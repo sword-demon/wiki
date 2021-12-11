@@ -1,7 +1,14 @@
 server:
   port: 8880
 
-
+# mybatis配置
+# 增加数据库连接
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/wiki?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1
+    driver-class-name: com.mysql.jdbc.Driver
 
 # 自定义配置项
 test:
