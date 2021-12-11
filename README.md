@@ -11,8 +11,7 @@
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- 修改一下路径 项目根目录下log目录 mac 下换成 .\ windows为./ -->
-    <property name="PATH" value=".\log"></property>
+    <property name="PATH" value="./log"></property>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
