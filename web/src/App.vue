@@ -1,26 +1,26 @@
 <template>
   <a-layout>
-    <a-layout-header class="header">
-      <div class="logo">无解知识库</div>
-      <a-menu
-          theme="dark"
-          mode="horizontal"
-          v-model:selectedKeys="selectedKeys1"
-          :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
-    </a-layout-header>
+    <the-header />
     <a-layout>
       <router-view />
     </a-layout>
-    <a-layout-footer style="text-align: center">
-      电子书
-    </a-layout-footer>
+    <the-footer />
   </a-layout>
 </template>
+
+<script lang="ts">
+import {defineComponent} from 'vue'
+import TheHeader from '@/components/the-header.vue'
+import TheFooter from '@/components/the-footer.vue'
+
+export default defineComponent({
+  name: 'app',
+  components: {
+    TheHeader,
+    TheFooter
+  }
+})
+</script>
 
 <style>
 #components-layout-demo-top-side .logo {
