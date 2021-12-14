@@ -46,24 +46,40 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      Content
+      <pre>{{ ebooks }}</pre>
+      <pre>{{ books }}</pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
   name: 'Home',
   // vue3新增的初始化方法，组件加载完之后就会初始化
   setup() {
-    console.log("setup")
-    axios.get("http://localhost:8880/ebook/list?name=spring")
-    .then((response) => {
-      console.log(response);
+
+    const ebooks = ref(); // 响应式的数据
+    const ebooks1 = reactive({books: []}); // 响应式的数据 方式2
+
+    // 生命周期函数里比较适合写初始化内容
+    onMounted(() => {
+      console.log("onMounted")
+      axios.get("http://localhost:8880/ebook/list?name=spring")
+          .then((response) => {
+            const data = response.data;
+            ebooks.value = data.content
+            ebooks1.books = data.content
+            console.log(response);
+          });
     })
+
+    return {
+      ebooks,
+      books: toRef(ebooks1, "books")
+    }
   }
 });
 </script>
