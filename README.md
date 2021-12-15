@@ -71,3 +71,32 @@
 ## properties和yaml转换网址
 [properties和yaml转换网址](https://toyaml.com/index.html)
 
+
+## 前端axios拦截器打印日志
+`main.ts`
+
+```typescript
+import axios from "axios";
+
+axios.defaults.baseURL = process.env.VUE_APP_SERVER
+
+/**
+ * axios 拦截请求
+ */
+axios.interceptors.request.use(function (config) {
+    console.log('请求参数: ', config)
+    return config
+}, error => {
+    return Promise.reject(error)
+})
+
+/**
+ * axios 拦截响应内容
+ */
+axios.interceptors.response.use(function (response) {
+    console.log('返回结果: ', response)
+    return response
+}, error => {
+    return Promise.reject(error)
+})
+```
