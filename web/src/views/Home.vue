@@ -84,8 +84,8 @@ export default defineComponent({
 
     // 生命周期函数里比较适合写初始化内容
     onMounted(() => {
-      console.log("onMounted")
-      axios.get(process.env.VUE_APP_SERVER + "/ebook/list")
+      console.log("onMounted222")
+      axios.get("/ebook/list")
           .then((response) => {
             const data = response.data;
             ebooks.value = data.content
