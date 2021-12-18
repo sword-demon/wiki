@@ -75,7 +75,7 @@ import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
-  name: 'Home',
+  name: 'home',
   // vue3新增的初始化方法，组件加载完之后就会初始化
   setup() {
 
