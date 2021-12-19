@@ -80,16 +80,21 @@ export default defineComponent({
   setup() {
 
     const ebooks = ref(); // 响应式的数据
-    const ebooks1 = reactive({books: []}); // 响应式的数据 方式2
+    // const ebooks1 = reactive({books: []}); // 响应式的数据 方式2
 
     // 生命周期函数里比较适合写初始化内容
     onMounted(() => {
-      axios.get("/ebook/list")
+      axios.get("/ebook/list", {
+        params: {
+          page: 1,
+          size: 1000
+        }
+      })
           .then((response) => {
             const data = response.data;
-            ebooks.value = data.content
-            ebooks1.books = data.content
-            console.log(response);
+            ebooks.value = data.content.list
+            // ebooks1.books = data.content
+            // console.log(response);
           });
     })
 
@@ -101,7 +106,7 @@ export default defineComponent({
 
     return {
       ebooks,
-      books: toRef(ebooks1, "books"),
+      // books: toRef(ebooks1, "books"),
       actions
     }
   }
