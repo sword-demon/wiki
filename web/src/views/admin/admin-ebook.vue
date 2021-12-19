@@ -1,46 +1,27 @@
 <template>
-  <a-layout>
-    <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-    >
-      <e-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-srouce="ebooks"
-          :pagination="pagination"
-          :loading="Loading"
-          @change="handleTableChange">
-        <template #cover="{text: cover}">
-          <img v-if="cover" :src="cover" alt="avatar">
-        </template>
-        <template v-slot:action="{text, record}">
-          <!-- 空格组件 -->
-          <a-space size="small">
-            <a-button type="primary">
-              编辑
-            </a-button>
-            <a-popconfirm
-                title="删除后不可恢复，确认删除?"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="">
-              <a-button type="danger">
-                删除
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </e-table>
-    </a-layout-content>
-  </a-layout>
-
-  <a-modal
-  title="电子书表单"
-  v-model:visible="modalVisible"
-  :confirm-loading="modalLoading"
-  @ok="handleModalOk">
-
-  </a-modal>
+  <a-layout-content
+      :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+  >
+    <a-table
+        :columns="columns"
+        :row-key="record => record.id"
+        :data-source="ebooks"
+        :pagination="pagination"
+        :loading="Loading"
+        @change="handleTableChange">
+      <template #cover="{text: cover}">
+        <img v-if="cover" :src="cover" alt="avatar">
+      </template>
+      <template v-slot:action="{text, record}">
+        <!-- 空格组件 -->
+        <a-space size="small">
+          <a-button type="primary">
+            编辑
+          </a-button>
+        </a-space>
+      </template>
+    </a-table>
+  </a-layout-content>
 </template>
 
 <script lang="ts">
@@ -54,7 +35,7 @@ export default defineComponent({
     const ebooks = ref()
     const pagination = ref({
       current: 1,
-      pageSize: 2,
+      pageSize: 4,
       total: 0
     })
     const loading = ref(false)
@@ -105,8 +86,7 @@ export default defineComponent({
       axios.get("/ebook/list", {
         params: {
           page: params.page,
-          size: params.size,
-          name: params.value.name
+          size: params.size
         }
       }).then((response) => {
         loading.value = false
@@ -132,7 +112,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleQuery({})
+      handleQuery({
+        page: 1,
+        size: pagination.value.pageSize // 响应式变量 必须加上 .value  size 必须和后端的 PageReq 的size一致
+      })
     })
 
     return {
