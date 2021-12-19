@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.wx.wiki.domain.Ebook;
 import com.wx.wiki.domain.EbookExample;
 import com.wx.wiki.mapper.EbookMapper;
-import com.wx.wiki.req.EbookReq;
-import com.wx.wiki.resp.EbookResp;
+import com.wx.wiki.req.EbookQueryReq;
+import com.wx.wiki.req.EbookSaveReq;
+import com.wx.wiki.resp.EbookQueryResp;
 import com.wx.wiki.resp.PageResp;
 import com.wx.wiki.util.CopyUtil;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -42,12 +43,26 @@ public class EbookService {
         LOG.info("总页数: {}", pageInfo.getPages());
 
         // 列表复制 => 工具类的列表复制
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
         return pageResp;
+    }
+
+    /**
+     * save 既要支持新增也要支持更新
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            ebookMapper.insert(ebook);
+        } else {
+            // 更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }

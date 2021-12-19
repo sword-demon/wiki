@@ -1,6 +1,6 @@
-package com.wx.wiki.resp;
+package com.wx.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

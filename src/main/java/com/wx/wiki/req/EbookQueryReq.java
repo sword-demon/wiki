@@ -1,6 +1,6 @@
 package com.wx.wiki.req;
 
-public class EbookReq extends PageReq {
+public class EbookQueryReq extends PageReq {
     private Long id;
 
     private String name;
@@ -23,7 +23,7 @@ public class EbookReq extends PageReq {
 
     @Override
     public String toString() {
-        return "EbookReq{" +
+        return "EbookQueryReq{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
