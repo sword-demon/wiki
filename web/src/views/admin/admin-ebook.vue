@@ -24,9 +24,16 @@
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="确认要删除吗?"
+                ok-text="确认"
+                cancel-text="取消"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="danger">
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -40,19 +47,19 @@
       @ok="handleModalOk">
     <a-form :modal="ebook" :label-col="{span: 6}">
       <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
+        <a-input v-model:value="ebook.cover"/>
       </a-form-item>
       <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
+        <a-input v-model:value="ebook.name"/>
       </a-form-item>
       <a-form-item label="分类1">
-        <a-input v-model:value="ebook.category1Id" />
+        <a-input v-model:value="ebook.category1Id"/>
       </a-form-item>
       <a-form-item label="分类2">
-        <a-input v-model:value="ebook.category2Id" />
+        <a-input v-model:value="ebook.category2Id"/>
       </a-form-item>
       <a-form-item label="描述">
-        <a-input v-model:value="ebook.description" type="text" />
+        <a-input v-model:value="ebook.description" type="text"/>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -180,6 +187,22 @@ export default defineComponent({
       ebook.value = {}
     }
 
+    // 删除
+    const handleDelete = (id: number) => {
+      axios.delete("/ebook/delete/" + id).then((response) => {
+        const data = response.data
+        if (data.success) {
+          // 重新加载列表
+          handleQuery({
+            page: pagination.value.current, // 重新查询当前页
+            size: pagination.value.pageSize // 响应式变量 必须加上 .value  size 必须和后端的 PageReq 的size一致
+          })
+        } else {
+          message.error(data.message)
+        }
+      })
+    }
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -195,6 +218,7 @@ export default defineComponent({
       handleTableChange,
       edit,
       add,
+      handleDelete,
       ebook,
       modalVisible,
       modalLoading,
