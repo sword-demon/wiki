@@ -29,7 +29,7 @@ public class EbookController {
     // @RequestBody 就是接收 json 方式的提交，加这个才会接收到
     // form表单方式的提交，就不需要加
     @PostMapping("/save")
-    public CommonResp save(@RequestBody EbookSaveReq req) {
+    public CommonResp save(@Valid @RequestBody EbookSaveReq req) {
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
         return resp;
