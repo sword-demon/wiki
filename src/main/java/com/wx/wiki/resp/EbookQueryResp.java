@@ -1,6 +1,8 @@
 package com.wx.wiki.resp;
 
-public class EbookQueryResp {
+import com.wx.wiki.req.PageReq;
+
+public class EbookQueryResp extends PageReq {
     private Long id;
 
     private String name;

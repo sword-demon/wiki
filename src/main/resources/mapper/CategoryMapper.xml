@@ -2,12 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wx.wiki.mapper.CategoryMapper">
   <resultMap id="BaseResultMap" type="com.wx.wiki.domain.Category">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent" jdbcType="BIGINT" property="parent" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="topic_img_id" jdbcType="INTEGER" property="topicImgId" />
-    <result column="delete_time" jdbcType="INTEGER" property="deleteTime" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, topic_img_id, delete_time, description, update_time
+    id, parent, `name`, sort
   </sql>
   <select id="selectByExample" parameterType="com.wx.wiki.domain.CategoryExample" resultMap="BaseResultMap">
     select
@@ -84,15 +82,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from category
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from category
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.wx.wiki.domain.CategoryExample">
     delete from category
@@ -101,12 +99,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.wx.wiki.domain.Category">
-    insert into category (id, `name`, topic_img_id, 
-      delete_time, description, update_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{topicImgId,jdbcType=INTEGER}, 
-      #{deleteTime,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}
-      )
+    insert into category (id, parent, `name`, 
+      sort)
+    values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.wx.wiki.domain.Category">
     insert into category
@@ -114,40 +110,28 @@
       <if test="id != null">
         id,
       </if>
+      <if test="parent != null">
+        parent,
+      </if>
       <if test="name != null">
         `name`,
       </if>
-      <if test="topicImgId != null">
-        topic_img_id,
-      </if>
-      <if test="deleteTime != null">
-        delete_time,
-      </if>
-      <if test="description != null">
-        description,
-      </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="sort != null">
+        sort,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=BIGINT},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="topicImgId != null">
-        #{topicImgId,jdbcType=INTEGER},
-      </if>
-      <if test="deleteTime != null">
-        #{deleteTime,jdbcType=INTEGER},
-      </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=INTEGER},
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -161,22 +145,16 @@
     update category
     <set>
       <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.parent != null">
+        parent = #{record.parent,jdbcType=BIGINT},
       </if>
       <if test="record.name != null">
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.topicImgId != null">
-        topic_img_id = #{record.topicImgId,jdbcType=INTEGER},
-      </if>
-      <if test="record.deleteTime != null">
-        delete_time = #{record.deleteTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.description != null">
-        description = #{record.description,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -185,12 +163,10 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update category
-    set id = #{record.id,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=BIGINT},
+      parent = #{record.parent,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
-      topic_img_id = #{record.topicImgId,jdbcType=INTEGER},
-      delete_time = #{record.deleteTime,jdbcType=INTEGER},
-      description = #{record.description,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      sort = #{record.sort,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -198,31 +174,23 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.wx.wiki.domain.Category">
     update category
     <set>
+      <if test="parent != null">
+        parent = #{parent,jdbcType=BIGINT},
+      </if>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="topicImgId != null">
-        topic_img_id = #{topicImgId,jdbcType=INTEGER},
-      </if>
-      <if test="deleteTime != null">
-        delete_time = #{deleteTime,jdbcType=INTEGER},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=INTEGER},
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.wx.wiki.domain.Category">
     update category
-    set `name` = #{name,jdbcType=VARCHAR},
-      topic_img_id = #{topicImgId,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      description = #{description,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    set parent = #{parent,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

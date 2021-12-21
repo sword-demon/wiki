@@ -1,6 +1,6 @@
-package com.wx.wiki.domain;
+package com.wx.wiki.resp;
 
-public class Category {
+public class CategoryQueryResp {
     private Long id;
 
     private Long parent;
