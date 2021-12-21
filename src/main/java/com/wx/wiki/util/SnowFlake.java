@@ -111,6 +111,7 @@ public class SnowFlake {
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
+            // 测试雪花算法生成的id
             System.out.println(snowFlake.nextId());
             System.out.println(System.currentTimeMillis() - start);
         }
