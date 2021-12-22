@@ -39,6 +39,7 @@ public class CategoryController {
     // form表单方式的提交，就不需要加
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody CategorySaveReq req) {
+        System.out.println(req.getParent());
         CommonResp resp = new CommonResp<>();
         categoryService.save(req);
         return resp;
