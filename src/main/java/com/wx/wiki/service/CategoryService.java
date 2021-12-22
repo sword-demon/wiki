@@ -30,9 +30,22 @@ public class CategoryService {
     @Resource
     private SnowFlake snowFlake;
 
+    public List<CategoryQueryResp> all() {
+
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc"); // 排序
+        // 只对第一个select有用 所以最好就把这2个放在一起
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+        // 列表复制 => 工具类的列表复制
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return list;
+    }
+
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
 
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
         // 只对第一个select有用 所以最好就把这2个放在一起
         PageHelper.startPage(req.getPage(), req.getSize());
