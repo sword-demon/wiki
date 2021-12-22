@@ -20,7 +20,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :pagination="false"
           :loading="Loading">
         <template #cover="{text: cover}">
@@ -104,6 +104,9 @@ export default defineComponent({
       }
     ]
 
+    // 一级分类
+    const level1 = ref()
+
     const handleQuery = () => {
       loading.value = true
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑
@@ -113,6 +116,11 @@ export default defineComponent({
         const data = response.data
         if (data.success) {
           categorys.value = data.content
+          console.log('原始数组: ', categorys.value)
+
+          level1.value = []
+          level1.value = Tool.array2Tree(categorys.value, 0)
+          console.log('树形机构: ', level1.value)
         } else {
           message.error(data.message)
         }
@@ -171,7 +179,8 @@ export default defineComponent({
 
     return {
       param,
-      categorys,
+      level1,
+      // categorys,
       columns,
       loading,
       edit,
