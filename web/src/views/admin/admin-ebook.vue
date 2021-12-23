@@ -217,9 +217,7 @@ export default defineComponent({
 
     // 查询所有分类
     const handleQueryCategory = () => {
-      loading.value = true
       axios.get("/category/all").then((response) => {
-        loading.value = false
         const data = response.data
         if (data.success) {
           categorys = data.content
@@ -228,6 +226,12 @@ export default defineComponent({
           level1.value = []
           level1.value = Tool.array2Tree(categorys, 0)
           console.log('树形结构: ', level1.value)
+
+          // 加载完分类后加载电子书
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize // 响应式变量 必须加上 .value  size 必须和后端的 PageReq 的size一致
+          })
         } else {
           message.error(data.message)
         }
@@ -251,10 +255,6 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize // 响应式变量 必须加上 .value  size 必须和后端的 PageReq 的size一致
-      })
       handleQueryCategory()
     })
 
