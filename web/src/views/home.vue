@@ -4,23 +4,22 @@
       <a-menu
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <route-link :to="'/'">
-            <MailOutlined />
-            <span>欢迎</span>
-          </route-link>
+          <MailOutlined/>
+          <span>欢迎</span>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
               <span>
                 <user-outlined/>
-                {{item.name}}
+                {{ item.name }}
               </span>
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
-            <MailOutlined />
-            <span>{{child.name}}</span>
+            <MailOutlined/>
+            <span>{{ child.name }}</span>
           </a-menu-item>
         </a-sub-menu>
       </a-menu>
@@ -28,7 +27,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list :grid="{ gutter: 20, column: 3 }" item-layout="vertical" size="large" :data-source="ebooks">
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>欢迎使用无解的知识库</h1>
+      </div>
+      <a-list v-show="!isShowWelcome" :grid="{ gutter: 20, column: 3 }" item-layout="vertical" size="large"
+              :data-source="ebooks">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
@@ -55,8 +58,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import axios from 'axios';
-import {message} from 'ant-design-vue'
-import {Tool} from '@/util/tool'
+import { message } from 'ant-design-vue'
+import { Tool } from '@/util/tool'
 
 export default defineComponent({
   name: 'home',
@@ -106,6 +109,19 @@ export default defineComponent({
           });
     })
 
+    const isShowWelcome = ref(true)
+
+    // 菜单点击
+    const handleClick = (value: any) => {
+      // console.log(value)
+      // if (value.key === 'welcome') {
+      //   isShowWelcome.value = true
+      // } else {
+      //   isShowWelcome.value = false
+      // }
+      isShowWelcome.value = value.key === 'welcome';
+    }
+
     const actions: Record<string, string>[] = [
       {type: 'StarOutlined', text: '156'},
       {type: 'LikeOutlined', text: '156'},
@@ -116,7 +132,9 @@ export default defineComponent({
       ebooks,
       // books: toRef(ebooks1, "books"),
       actions,
-      level1
+      level1,
+      isShowWelcome,
+      handleClick
     }
   }
 });
