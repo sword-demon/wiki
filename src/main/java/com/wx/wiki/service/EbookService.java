@@ -38,6 +38,10 @@ public class EbookService {
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
+        // 查询分类
+        if (!ObjectUtils.isEmpty(req.getCategoryId2())) {
+            criteria.andCategory2IdEqualTo(req.getCategoryId2());
+        }
         // 只对第一个select有用 所以最好就把这2个放在一起
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);

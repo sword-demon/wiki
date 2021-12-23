@@ -89,16 +89,13 @@ export default defineComponent({
       })
     }
 
-    // 生命周期函数里比较适合写初始化内容
-    onMounted(() => {
-
-      // 初始加载分类
-      handleQueryCategory()
-
+    // 查询电子书
+    const handleQueryEbook = () => {
       axios.get("/ebook/list", {
         params: {
           page: 1,
-          size: 1000
+          size: 1000,
+          categoryId2: categoryId2
         }
       })
           .then((response) => {
@@ -107,20 +104,32 @@ export default defineComponent({
             // ebooks1.books = data.content
             // console.log(response);
           });
-    })
+    }
 
     const isShowWelcome = ref(true)
+    let categoryId2 = 0
 
     // 菜单点击
     const handleClick = (value: any) => {
       // console.log(value)
-      // if (value.key === 'welcome') {
-      //   isShowWelcome.value = true
-      // } else {
-      //   isShowWelcome.value = false
-      // }
-      isShowWelcome.value = value.key === 'welcome';
+      if (value.key === 'welcome') {
+        isShowWelcome.value = true
+      } else {
+        categoryId2 = value.key
+        isShowWelcome.value = false
+        // 点击分类时调用
+        handleQueryEbook()
+      }
     }
+
+// 生命周期函数里比较适合写初始化内容
+    onMounted(() => {
+
+      // 初始加载分类
+      handleQueryCategory()
+
+      // handleQueryEbook();
+    })
 
     const actions: Record<string, string>[] = [
       {type: 'StarOutlined', text: '156'},
