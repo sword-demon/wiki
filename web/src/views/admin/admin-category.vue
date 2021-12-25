@@ -80,6 +80,8 @@ import { defineComponent, onMounted, ref } from 'vue'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { Tool } from '@/util/tool'
+import { IDrawerProps } from "ant-design-vue/es/vc-drawer/src/IDrawerPropTypes";
+import level = IDrawerProps.level;
 
 export default defineComponent({
   name: 'AdminCategory',
@@ -118,7 +120,7 @@ export default defineComponent({
     const handleQuery = () => {
       loading.value = true
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑
-      categorys.value = []
+      level1.value = []
       axios.get("/category/all").then((response) => {
         loading.value = false
         const data = response.data
