@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../../../../../Library/Application Support/abnerworks.Typora/themes/vue.css">
 <template>
   <a-layout>
     <a-layout-content :style="{background: '#fff', padding: '24px', margin: 0, minHeight: '280px'}">
@@ -22,9 +23,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import axios from "axios";
-import {message} from "ant-design-vue";
-import {Tool} from "@/util/tool";
-import {useRoute} from "vue-router";
+import { message } from "ant-design-vue";
+import { Tool } from "@/util/tool";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: 'doc',
@@ -92,12 +93,14 @@ export default defineComponent({
   border-top: 1px solid #ccc;
   border-left: 1px solid #ccc;
 }
+
 .wangeditor table td,
 .wangeditor table th {
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
   padding: 3px 5px;
 }
+
 .wangeditor table th {
   border-bottom: 2px solid #ccc;
   text-align: center;
@@ -121,9 +124,11 @@ export default defineComponent({
   *zoom: 1;
   background-color: #f1f1f1;
   border-radius: 3px;
-  padding: 3px 5px;
-  margin: 0 3px;
+  padding: 5px 10px;
+  margin: 0px 3px;
+  font-family: Consolas;
 }
+
 .wangeditor pre code {
   display: block;
 }
