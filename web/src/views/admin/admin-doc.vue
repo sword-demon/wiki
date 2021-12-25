@@ -180,6 +180,9 @@ export default defineComponent({
           // 父文档下拉框初始化，相当于点击新增
           treeSelectData.value = Tool.copy(level1.value)
           // 添加一个无字
+          if (!treeSelectData.value) {
+            treeSelectData.value = []
+          }
           treeSelectData.value.unshift({id: 0, name: '无'})
         } else {
           message.error(data.message)
