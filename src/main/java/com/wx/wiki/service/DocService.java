@@ -35,9 +35,11 @@ public class DocService {
     @Resource
     private SnowFlake snowFlake;
 
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long ebookId) {
 
         DocExample docExample = new DocExample();
+        // 如果 ebookId = null 那就搜不到文档
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
         docExample.setOrderByClause("sort asc"); // 排序
         // 只对第一个select有用 所以最好就把这2个放在一起
         List<Doc> docList = docMapper.selectByExample(docExample);
