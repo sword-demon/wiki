@@ -21,12 +21,14 @@
             </a-form>
           </p>
           <a-table
+              v-if="level1.length > 0"
               :columns="columns"
               :row-key="record => record.id"
               :data-source="level1"
               :pagination="false"
               :loading="Loading"
-              size="small">
+              size="small"
+              :defaultExpandAllRows="true">
             <template #name="{text, record}">
               {{ record.sort }} {{ text }}
             </template>
@@ -127,6 +129,10 @@ export default defineComponent({
     const docs = ref()
     const loading = ref(false)
 
+    // 树选择组件会随着当前编辑的节点而变化，所以单独声明一个响应式的变量
+    const treeSelectData = ref()
+    treeSelectData.value = []
+
     const columns = [
       {
         title: '名称',
@@ -142,6 +148,8 @@ export default defineComponent({
 
     // 一级文档
     const level1 = ref()
+    // 初始化
+    level1.value = []
 
     const handleQuery = () => {
       loading.value = true
@@ -166,9 +174,7 @@ export default defineComponent({
 
     // 表单
 
-    // 树选择组件会随着当前编辑的节点而变化，所以单独声明一个响应式的变量
-    const treeSelectData = ref()
-    treeSelectData.value = []
+
     const doc = ref()
     doc.value = {}
     const modalVisible = ref(false)
