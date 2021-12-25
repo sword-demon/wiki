@@ -104,6 +104,16 @@ public class DocService {
         docMapper.deleteByPrimaryKey(id);
     }
 
+    // 查找文档内容
+    public String findContent(Long id) {
+        Content content = contentMapper.selectByPrimaryKey(id);
+        if (!ObjectUtils.isEmpty(content)) {
+            return content.getContent();
+        } else {
+            return "";
+        }
+    }
+
     /**
      * 批量删除文档
      * @param ids

@@ -172,6 +172,19 @@ export default defineComponent({
       })
     }
 
+    // 内容查询
+    const handleQueryContent = () => {
+      axios.get("/doc/find-content/" + doc.value.id).then((response) => {
+        const data = response.data
+        if (data.success) {
+          // 给富文本框赋值
+          editor.txt.html(data.content)
+        } else {
+          message.error(data.message)
+        }
+      })
+    }
+
     // 表单
     const doc = ref()
     // 初始赋值为空对象
@@ -266,6 +279,8 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+      // 等到doc.value 有值再去查
+      handleQueryContent()
 
       // 不能选择当前节点及其所有子孙节点
       treeSelectData.value = Tool.copy(level1.value)

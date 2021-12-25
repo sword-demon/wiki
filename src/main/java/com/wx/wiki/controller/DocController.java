@@ -36,6 +36,15 @@ public class DocController {
         return resp;
     }
 
+    // 根据doc的主键id查找文档内容
+    @GetMapping("/find-content/{id}")
+    public CommonResp<String> findContent(@PathVariable Long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        String content = docService.findContent(id);
+        resp.setContent(content);
+        return resp;
+    }
+
     // @RequestBody 就是接收 json 方式的提交，加这个才会接收到
     // form表单方式的提交，就不需要加
     @PostMapping("/save")
