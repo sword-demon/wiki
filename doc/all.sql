@@ -1,9 +1,10 @@
 drop table if exists test;
-create table test(
-    id bigint not null comment 'id',
-    name varchar(50) comment '名称',
+create table test
+(
+    id       bigint not null comment 'id',
+    name     varchar(50) comment '名称',
     password varchar(50) comment '密码',
-    primary key(id)
+    primary key (id)
 )engine=innodb default charset=utf8mb4 comment='测试';
 
 drop table if exists `demo`;
@@ -15,7 +16,8 @@ create table `demo`
 ) engine = innodb
   default charset = utf8mb4 comment '测试代码生成器';
 
-# 电子书表
+#
+电子书表
 drop table if exists `ebook`;
 create table `ebook`
 (
@@ -40,7 +42,8 @@ values (1, 'SpringBoot 入门教程', '零基础入门Java开发，企业级应�
        (5, 'Oracle 入门教程', '零基础入门 Oracle 开发，企业级应用开发最佳首选框架');
 
 
-# 分类
+#
+分类
 drop table if exists `category`;
 create table `category`
 (
@@ -93,3 +96,12 @@ values (1, 1, 0, '文档1', 1, 0, 0),
        (4, 1, 3, '文档2.1', 1, 0, 0),
        (5, 1, 3, '文档2.2', 2, 0, 0),
        (6, 1, 5, '文档2.2.1', 1, 0, 0);
+
+-- 文档内容
+drop table if exists `content`;
+create table `content`
+(
+    `id`      bigint     not null comment '文档id',
+    `content` mediumtext not null comment '内容',
+    primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='文档内容';
