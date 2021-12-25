@@ -166,6 +166,11 @@ export default defineComponent({
           level1.value = []
           level1.value = Tool.array2Tree(docs.value, 0)
           console.log('树形机构: ', level1.value)
+
+          // 父文档下拉框初始化，相当于点击新增
+          treeSelectData.value = Tool.copy(level1.value)
+          // 添加一个无字
+          treeSelectData.value.unshift({id: 0, name: '无'})
         } else {
           message.error(data.message)
         }

@@ -12,7 +12,7 @@
           ></a-tree>
         </a-col>
         <a-col :span="18">
-
+          <div :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -35,6 +35,7 @@ export default defineComponent({
 
     const level1 = ref()
     level1.value = []
+    const html = ref()
 
     // 数据查询
     const handleQuery = () => {
@@ -51,12 +52,35 @@ export default defineComponent({
       })
     }
 
+    // 内容查询
+    const handleQueryContent = (id: number) => {
+      axios.get("/doc/find-content/" + id).then((response) => {
+        const data = response.data
+        if (data.success) {
+          // 给富文本框赋值
+          html.value = data.content
+        } else {
+          message.error(data.message)
+        }
+      })
+    }
+
+    const onSelect = (selectedKeys: any, info: any) => {
+      console.log(selectedKeys, info)
+      if (Tool.isNotEmpty(selectedKeys)) {
+        // 加载内容
+        handleQueryContent(selectedKeys[0])
+      }
+    }
+
     onMounted(() => {
       handleQuery()
     })
 
     return {
-      level1
+      level1,
+      html,
+      onSelect
     }
   }
 })
