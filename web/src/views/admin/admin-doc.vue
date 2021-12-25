@@ -196,15 +196,14 @@ export default defineComponent({
     editor.config.zIndex = 0
 
     const handleSave = () => {
-      modalLoading.value = true
       // 和后端的字段内容联系起来
       doc.value.content = editor.txt.html()
       axios.post("/doc/save", doc.value).then((response) => {
-        modalLoading.value = false
         const data = response.data
         if (data.success) {
-          modalVisible.value = false
-          modalLoading.value = false
+          // 消息提示
+          message.success("保存成功!")
+
           // 重新加载列表
           handleQuery()
         } else {
@@ -277,7 +276,11 @@ export default defineComponent({
 
     // 编辑
     const edit = (record: any) => {
-      modalVisible.value = true;
+      // 没有模态框了可以去除
+      // modalVisible.value = true;
+
+      // 编辑的时候先去除富文本框
+      editor.txt.html("")
       doc.value = Tool.copy(record);
       // 等到doc.value 有值再去查
       handleQueryContent()
@@ -296,7 +299,9 @@ export default defineComponent({
 
     // 新增
     const add = () => {
-      modalVisible.value = true;
+      // modalVisible.value = true;
+      // 先去除富文本框
+      editor.txt.html("")
       // 清空
       doc.value = {
         ebookId: route.query.ebookId
