@@ -3,7 +3,8 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-row>
+      <!-- 间距 -->
+      <a-row :gutter="24">
         <a-col :span="8">
           <p>
             <a-form layout="inline" :model="param">
@@ -24,14 +25,15 @@
               :row-key="record => record.id"
               :data-source="level1"
               :pagination="false"
-              :loading="Loading">
-            <template #cover="{text: cover}">
-              <img v-if="cover" :src="cover" alt="avatar">
+              :loading="Loading"
+              size="small">
+            <template #name="{text, record}">
+              {{ record.sort }} {{ text }}
             </template>
             <template v-slot:action="{text, record}">
               <!-- 空格组件 -->
               <a-space size="small">
-                <a-button type="primary" @click="edit(record)">
+                <a-button type="primary" @click="edit(record)" size="small">
                   编辑
                 </a-button>
                 <a-popconfirm
@@ -40,7 +42,7 @@
                     cancel-text="取消"
                     @confirm="handleDelete(record.id)"
                 >
-                  <a-button type="danger">
+                  <a-button type="danger" size="small">
                     删除
                   </a-button>
                 </a-popconfirm>
@@ -49,11 +51,20 @@
           </a-table>
         </a-col>
         <a-col :span="16">
-          <a-form :modal="doc" :label-col="{span: 6}">
-            <a-form-item label="名称">
-              <a-input v-model:value="doc.name"/>
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleSave">
+                  保存
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-form :modal="doc" layout="vertical" :label-col="{span: 6}">
+            <a-form-item>
+              <a-input v-model:value="doc.name" placeholder="名称"/>
             </a-form-item>
-            <a-form-item label="父文档">
+            <a-form-item>
               <!-- replaceFields 替换 treeNode 中 title,value,key,children 字段为 treeData 中对应的字段 -->
               <a-tree-select
                   v-model:value="doc.parent"
@@ -66,10 +77,10 @@
               >
               </a-tree-select>
             </a-form-item>
-            <a-form-item label="排序">
-              <a-input v-model:value="doc.sort"/>
+            <a-form-item>
+              <a-input v-model:value="doc.sort" placeholder="排序"/>
             </a-form-item>
-            <a-form-item label="内容">
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
@@ -78,13 +89,13 @@
     </a-layout-content>
   </a-layout>
 
-<!--  <a-modal-->
-<!--      title="文档表单"-->
-<!--      v-model:visible="modalVisible"-->
-<!--      :confirm-loading="modalLoading"-->
-<!--      @ok="handleModalOk">-->
-<!--    -->
-<!--  </a-modal>-->
+  <!--  <a-modal-->
+  <!--      title="文档表单"-->
+  <!--      v-model:visible="modalVisible"-->
+  <!--      :confirm-loading="modalLoading"-->
+  <!--      @ok="handleModalOk">-->
+  <!--    -->
+  <!--  </a-modal>-->
 </template>
 
 <script lang="ts">
@@ -119,17 +130,8 @@ export default defineComponent({
     const columns = [
       {
         title: '名称',
-        dataIndex: 'name'
-      },
-      {
-        title: '顺序',
-        key: 'sort',
-        dataIndex: 'sort'
-      },
-      {
-        title: '父文档',
-        dataIndex: 'parent',
-        slots: {customRender: 'parent'}
+        dataIndex: 'name',
+        slots: {customRender: 'name'}
       },
       {
         title: 'Action',
@@ -172,8 +174,10 @@ export default defineComponent({
     const modalVisible = ref(false)
     const modalLoading = ref(false)
     const editor = new E("#content")
+    // 调整为0，防止下拉框被挡住
+    editor.config.zIndex = 0
 
-    const handleModalOk = () => {
+    const handleSave = () => {
       modalLoading.value = true
       axios.post("/doc/save", doc.value).then((response) => {
         modalLoading.value = false
@@ -263,9 +267,9 @@ export default defineComponent({
       // 为选择树添加一个 "无"字
       treeSelectData.value.unshift({id: 0, name: '无'})
 
-      setTimeout(() => {
-        editor.create()
-      }, 100)
+      // setTimeout(() => {
+      //   editor.create()
+      // }, 100)
     }
 
     // 新增
@@ -280,9 +284,10 @@ export default defineComponent({
       // 为选择树添加一个 "无"字
       treeSelectData.value.unshift({id: 0, name: '无'})
 
-      setTimeout(() => {
-        editor.create()
-      }, 100)
+      // 模态框里需要写
+      // setTimeout(() => {
+      //   editor.create()
+      // }, 100)
     }
 
     // 删除
@@ -313,6 +318,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery()
+      editor.create()
     })
 
     return {
@@ -327,7 +333,7 @@ export default defineComponent({
       doc,
       modalVisible,
       modalLoading,
-      handleModalOk,
+      handleSave,
       handleQuery,
       treeSelectData
     }
