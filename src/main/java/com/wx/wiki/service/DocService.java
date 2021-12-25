@@ -2,8 +2,10 @@ package com.wx.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wx.wiki.domain.Content;
 import com.wx.wiki.domain.Doc;
 import com.wx.wiki.domain.DocExample;
+import com.wx.wiki.mapper.ContentMapper;
 import com.wx.wiki.mapper.DocMapper;
 import com.wx.wiki.req.DocQueryReq;
 import com.wx.wiki.req.DocSaveReq;
@@ -26,6 +28,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -70,13 +75,24 @@ public class DocService {
      */
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            // 保存文档内容
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             // 更新
             docMapper.updateByPrimaryKey(doc);
+            // 全部字段和打字段的更新
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            // 可能表里没有关联的文档id 就需要插入一条数据
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
         }
     }
 

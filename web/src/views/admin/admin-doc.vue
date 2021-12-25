@@ -173,9 +173,8 @@ export default defineComponent({
     }
 
     // 表单
-
-
     const doc = ref()
+    // 初始赋值为空对象
     doc.value = {}
     const modalVisible = ref(false)
     const modalLoading = ref(false)
@@ -185,6 +184,8 @@ export default defineComponent({
 
     const handleSave = () => {
       modalLoading.value = true
+      // 和后端的字段内容联系起来
+      doc.value.content = editor.txt.html()
       axios.post("/doc/save", doc.value).then((response) => {
         modalLoading.value = false
         const data = response.data
