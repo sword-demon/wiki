@@ -3,81 +3,88 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-form layout="inline" :model="param">
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery()">
-              查询
-            </a-button>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add">
-              新增
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-source="level1"
-          :pagination="false"
-          :loading="Loading">
-        <template #cover="{text: cover}">
-          <img v-if="cover" :src="cover" alt="avatar">
-        </template>
-        <template v-slot:action="{text, record}">
-          <!-- 空格组件 -->
-          <a-space size="small">
-            <a-button type="primary" @click="edit(record)">
-              编辑
-            </a-button>
-            <a-popconfirm
-                title="确认要删除吗?"
-                ok-text="确认"
-                cancel-text="取消"
-                @confirm="handleDelete(record.id)"
-            >
-              <a-button type="danger">
-                删除
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table>
+      <a-row>
+        <a-col :span="8">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleQuery()">
+                  查询
+                </a-button>
+              </a-form-item>
+              <a-form-item>
+                <a-button type="primary" @click="add">
+                  新增
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-table
+              :columns="columns"
+              :row-key="record => record.id"
+              :data-source="level1"
+              :pagination="false"
+              :loading="Loading">
+            <template #cover="{text: cover}">
+              <img v-if="cover" :src="cover" alt="avatar">
+            </template>
+            <template v-slot:action="{text, record}">
+              <!-- 空格组件 -->
+              <a-space size="small">
+                <a-button type="primary" @click="edit(record)">
+                  编辑
+                </a-button>
+                <a-popconfirm
+                    title="确认要删除吗?"
+                    ok-text="确认"
+                    cancel-text="取消"
+                    @confirm="handleDelete(record.id)"
+                >
+                  <a-button type="danger">
+                    删除
+                  </a-button>
+                </a-popconfirm>
+              </a-space>
+            </template>
+          </a-table>
+        </a-col>
+        <a-col :span="16">
+          <a-form :modal="doc" :label-col="{span: 6}">
+            <a-form-item label="名称">
+              <a-input v-model:value="doc.name"/>
+            </a-form-item>
+            <a-form-item label="父文档">
+              <!-- replaceFields 替换 treeNode 中 title,value,key,children 字段为 treeData 中对应的字段 -->
+              <a-tree-select
+                  v-model:value="doc.parent"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="treeSelectData"
+                  placeholder="请选择父文档"
+                  tree-default-expand-all
+                  :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+              >
+              </a-tree-select>
+            </a-form-item>
+            <a-form-item label="排序">
+              <a-input v-model:value="doc.sort"/>
+            </a-form-item>
+            <a-form-item label="内容">
+              <div id="content"></div>
+            </a-form-item>
+          </a-form>
+        </a-col>
+      </a-row>
     </a-layout-content>
   </a-layout>
 
-  <a-modal
-      title="文档表单"
-      v-model:visible="modalVisible"
-      :confirm-loading="modalLoading"
-      @ok="handleModalOk">
-    <a-form :modal="doc" :label-col="{span: 6}">
-      <a-form-item label="名称">
-        <a-input v-model:value="doc.name"/>
-      </a-form-item>
-      <a-form-item label="父文档">
-        <!-- replaceFields 替换 treeNode 中 title,value,key,children 字段为 treeData 中对应的字段 -->
-        <a-tree-select
-            v-model:value="doc.parent"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :tree-data="treeSelectData"
-            placeholder="请选择父文档"
-            tree-default-expand-all
-            :replaceFields="{title: 'name', key: 'id', value: 'id'}"
-        >
-        </a-tree-select>
-      </a-form-item>
-      <a-form-item label="排序">
-        <a-input v-model:value="doc.sort"/>
-      </a-form-item>
-      <a-form-item label="内容">
-        <div id="content"></div>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+<!--  <a-modal-->
+<!--      title="文档表单"-->
+<!--      v-model:visible="modalVisible"-->
+<!--      :confirm-loading="modalLoading"-->
+<!--      @ok="handleModalOk">-->
+<!--    -->
+<!--  </a-modal>-->
 </template>
 
 <script lang="ts">
@@ -161,6 +168,7 @@ export default defineComponent({
     const treeSelectData = ref()
     treeSelectData.value = []
     const doc = ref()
+    doc.value = {}
     const modalVisible = ref(false)
     const modalLoading = ref(false)
     const editor = new E("#content")
