@@ -96,7 +96,7 @@
 
       <!-- 抽屉 -->
       <a-drawer width="900" placement="right" :closeable="false" :visible="drawerVisible" @close="onDrawerClose">
-        <div class="wanggeditor" :innerHTML="previewHtml"></div>
+        <div class="wangeditor" :innerHTML="previewHtml"></div>
       </a-drawer>
     </a-layout-content>
   </a-layout>
