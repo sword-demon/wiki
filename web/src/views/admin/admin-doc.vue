@@ -78,11 +78,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, createVNode } from 'vue'
 import axios from 'axios'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import { Tool } from '@/util/tool'
 import { useRoute } from "vue-router";
+import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
 
 export default defineComponent({
   name: 'AdminDoc',
@@ -204,7 +205,9 @@ export default defineComponent({
     }
 
     // 存储删除的id结果集
-    const ids: Array<string> = []
+    const deleteIds: Array<string> = []
+    // 获取所有要删除的文档名称
+    const deleteNames: Array<string> = [];
 
     const getDeleteIds = (treeSelectData: any, id: any) => {
       // console.log(treeSelectData, id)
@@ -213,7 +216,9 @@ export default defineComponent({
         const node = treeSelectData[i]
         if (node.id === id) {
           // 将目标放入id结果集
-          ids.push(id)
+          deleteIds.push(id)
+          // 将目标名称放入名称结果集
+          deleteNames.push(node.name)
 
           // 遍历所有自及诶单，将所有子节点全部都加上disabled
           const children = node.children
@@ -260,16 +265,26 @@ export default defineComponent({
 
     // 删除
     const handleDelete = (id: number) => {
-      console.log(level1.value, id, ids)
+      console.log(level1.value, id, deleteIds)
+      // 清空数组，否则多次删除时，数组会一直增加
+      deleteIds.length = 0
+      deleteNames.length = 0
       // 注意，响应式变量，必须加上 .value
       getDeleteIds(level1.value, id)
-      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
-        const data = response.data
-        if (data.success) {
-          // 重新加载列表
-          handleQuery()
-        } else {
-          message.error(data.message)
+      Modal.confirm({
+        title: '重要提醒',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '将删除: 【' + deleteNames.join(",") + "】 删除后不可恢复,确定删除?",
+        onOk() {
+          axios.delete("/doc/delete/" + deleteIds.join(",")).then((response) => {
+            const data = response.data
+            if (data.success) {
+              // 重新加载列表
+              handleQuery()
+            } else {
+              message.error(data.message)
+            }
+          })
         }
       })
     }
