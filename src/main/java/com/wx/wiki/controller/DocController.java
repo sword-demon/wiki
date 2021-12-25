@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -45,10 +46,11 @@ public class DocController {
         return resp;
     }
 
-    @DeleteMapping("/delete/{id}")
-    public CommonResp delete(@PathVariable Long id) {
+    @DeleteMapping("/delete/{ids}")
+    public CommonResp delete(@PathVariable String ids) {
         CommonResp resp = new CommonResp<>();
-        docService.delete(id);
+        List<String> stringList = Arrays.asList(ids.split(","));
+        docService.delete(stringList);
         return resp;
     }
 }

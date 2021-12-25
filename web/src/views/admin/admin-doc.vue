@@ -203,6 +203,35 @@ export default defineComponent({
       }
     }
 
+    // 存储删除的id结果集
+    const ids: Array<string> = []
+
+    const getDeleteIds = (treeSelectData: any, id: any) => {
+      // console.log(treeSelectData, id)
+      // 遍历数组，即遍历某一层节点
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i]
+        if (node.id === id) {
+          // 将目标放入id结果集
+          ids.push(id)
+
+          // 遍历所有自及诶单，将所有子节点全部都加上disabled
+          const children = node.children
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              getDeleteIds(children, children[j].id)
+            }
+          }
+        } else {
+          // 如果当前节点不是目标节点，则到其子节点再找找看
+          const children = node.children
+          if (Tool.isNotEmpty(children)) {
+            getDeleteIds(children, id)
+          }
+        }
+      }
+    }
+
     // 编辑
     const edit = (record: any) => {
       modalVisible.value = true;
@@ -231,7 +260,10 @@ export default defineComponent({
 
     // 删除
     const handleDelete = (id: number) => {
-      axios.delete("/doc/delete/" + id).then((response) => {
+      console.log(level1.value, id, ids)
+      // 注意，响应式变量，必须加上 .value
+      getDeleteIds(level1.value, id)
+      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
         const data = response.data
         if (data.success) {
           // 重新加载列表
