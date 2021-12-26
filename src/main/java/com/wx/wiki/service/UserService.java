@@ -7,9 +7,11 @@ import com.wx.wiki.domain.UserExample;
 import com.wx.wiki.exception.BusinessException;
 import com.wx.wiki.exception.BusinessExceptionCode;
 import com.wx.wiki.mapper.UserMapper;
+import com.wx.wiki.req.UserLoginReq;
 import com.wx.wiki.req.UserQueryReq;
 import com.wx.wiki.req.UserResetPassword;
 import com.wx.wiki.req.UserSaveReq;
+import com.wx.wiki.resp.UserLoginResp;
 import com.wx.wiki.resp.UserQueryResp;
 import com.wx.wiki.resp.PageResp;
 import com.wx.wiki.util.CopyUtil;
@@ -113,5 +115,29 @@ public class UserService {
         // id 和 password 有值
         User user = CopyUtil.copy(req, User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    // 登录
+    public UserLoginResp login(UserLoginReq req) {
+        // 校验 按用户名去数据库查
+        User userDB = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDB)) {
+            // 用户名不存在
+            LOG.info("用户名不存在: {}", req.getLoginName()); // 日志记录一下
+            // 提示注意 用户名不存在或密码不对，干扰攻击者的判断 一个模糊的提示
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+            // 比对密码
+            if (userDB.getPassword().equals(req.getPassword())) {
+                // 登录成功
+                UserLoginResp userLoginResp = CopyUtil.copy(userDB, UserLoginResp.class);
+                return userLoginResp;
+            } else {
+                // 密码不正确
+                // 可以尝试加一个功能：输入错误几次以上就锁定用户
+                LOG.info("密码不对, 输入密码: {}, 数据库密码: {}", req.getLoginName(), userDB.getPassword()); // 日志记录一下
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
     }
 }

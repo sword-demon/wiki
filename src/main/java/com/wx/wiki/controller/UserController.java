@@ -1,9 +1,11 @@
 package com.wx.wiki.controller;
 
+import com.wx.wiki.req.UserLoginReq;
 import com.wx.wiki.req.UserQueryReq;
 import com.wx.wiki.req.UserResetPassword;
 import com.wx.wiki.req.UserSaveReq;
 import com.wx.wiki.resp.CommonResp;
+import com.wx.wiki.resp.UserLoginResp;
 import com.wx.wiki.resp.UserQueryResp;
 import com.wx.wiki.resp.PageResp;
 import com.wx.wiki.service.UserService;
@@ -52,6 +54,16 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/logn")
+    public CommonResp logn(@Valid @RequestBody UserLoginReq req) {
+        // 十六进制的md5加密
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }
