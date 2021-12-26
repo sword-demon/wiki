@@ -8,6 +8,7 @@ import com.wx.wiki.exception.BusinessException;
 import com.wx.wiki.exception.BusinessExceptionCode;
 import com.wx.wiki.mapper.UserMapper;
 import com.wx.wiki.req.UserQueryReq;
+import com.wx.wiki.req.UserResetPassword;
 import com.wx.wiki.req.UserSaveReq;
 import com.wx.wiki.resp.UserQueryResp;
 import com.wx.wiki.resp.PageResp;
@@ -105,5 +106,12 @@ public class UserService {
         } else {
             return userList.get(0);
         }
+    }
+
+    // 修改密码
+    public void resetPassword(UserResetPassword req) {
+        // id 和 password 有值
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }
