@@ -75,7 +75,8 @@ public class UserService {
             }
         } else {
             // 更新
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null); // 设置为空，不更新登录名，不让用户进行编辑
+            userMapper.updateByPrimaryKeySelective(user); // 字段有值才会更新
         }
     }
 
