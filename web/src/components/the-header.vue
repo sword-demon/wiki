@@ -90,9 +90,9 @@ export default defineComponent({
       console.log('开始登录')
       loginModalLoading.value = true
       // 前端校验
-      if (loginUser.value.password.length < 6 || loginUser.value.password.length > 20) {
-        message.error('【密码】6~20位')
-      }
+      // if (loginUser.value.password.length < 6 || loginUser.value.password.length > 20) {
+      //   message.error('【密码】6~20位')
+      // }
       loginUser.value.password = hexMd5(loginUser.value.password + KEY)
       axios.post("/user/login", loginUser.value).then((res) => {
         loginModalLoading.value = false
