@@ -57,7 +57,7 @@ public class UserController {
         return resp;
     }
 
-    @PostMapping("/logn")
+    @PostMapping("/login")
     public CommonResp logn(@Valid @RequestBody UserLoginReq req) {
         // 十六进制的md5加密
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
