@@ -24,6 +24,9 @@
       <a-menu-item key="/">
         <router-link to="/">首页</router-link>
       </a-menu-item>
+      <a-menu-item key="/about">
+        <router-link to="/about">关于我们</router-link>
+      </a-menu-item>
       <a-menu-item key="/admin/user" :style="user.id ? null : {display: 'none'}">
         <router-link to="/admin/user">用户管理</router-link>
       </a-menu-item>
@@ -32,9 +35,6 @@
       </a-menu-item>
       <a-menu-item key="/admin/category" :style="user.id ? null : {display: 'none'}">
         <router-link to="/admin/category">分类管理</router-link>
-      </a-menu-item>
-      <a-menu-item key="/about">
-        <router-link to="/about">关于我们</router-link>
       </a-menu-item>
     </a-menu>
 
@@ -89,6 +89,10 @@ export default defineComponent({
     const login = () => {
       console.log('开始登录')
       loginModalLoading.value = true
+      // 前端校验
+      if (loginUser.value.password.length < 6 || loginUser.value.password.length > 20) {
+        message.error('【密码】6~20位')
+      }
       loginUser.value.password = hexMd5(loginUser.value.password + KEY)
       axios.post("/user/login", loginUser.value).then((res) => {
         loginModalLoading.value = false
