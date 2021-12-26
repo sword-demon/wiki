@@ -1,6 +1,15 @@
 <template>
   <a-layout-header class="header">
     <div class="logo"/>
+    <a-popconfirm
+        title="确认退出吗?"
+        ok-text="是"
+        cancel-text="否"
+        @confirm="logout">
+      <a class="login-menu" v-show="user.id">
+        <span>退出登录</span>
+      </a>
+    </a-popconfirm>
     <a class="login-menu" v-show="user.id">
       <span>您好: {{ user.name }}</span>
     </a>
@@ -96,13 +105,29 @@ export default defineComponent({
       })
     }
 
+    // 退出登录
+    const logout = () => {
+      console.log('退出登录开始')
+      axios.get("/user/logout/" + user.value.token).then((res) => {
+        const data = res.data
+        if (data.success) {
+          message.success("退出成功")
+
+          store.commit("setUser", {})
+        } else {
+          message.error(data.message)
+        }
+      })
+    }
+
     return {
       loginModalVisible,
       loginModalLoading,
       showLoginModal,
       loginUser,
       login,
-      user
+      user,
+      logout
     }
   }
 })
