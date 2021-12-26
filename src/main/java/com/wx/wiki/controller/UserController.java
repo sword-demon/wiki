@@ -6,6 +6,7 @@ import com.wx.wiki.resp.CommonResp;
 import com.wx.wiki.resp.UserQueryResp;
 import com.wx.wiki.resp.PageResp;
 import com.wx.wiki.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,6 +31,8 @@ public class UserController {
     // form表单方式的提交，就不需要加
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {
+        // 十六进制的md5加密
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;

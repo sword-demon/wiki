@@ -93,6 +93,7 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import { Tool } from "@/util/tool";
 
+// 告诉typescript 这两个变量是存在的
 declare let hexMd5: any;
 declare let KEY: any;
 
@@ -175,6 +176,7 @@ export default defineComponent({
     const handleModalOk = () => {
       modalLoading.value = true;
 
+      // 对前端传的密码进行加密
       user.value.password = hexMd5(user.value.password + KEY);
 
       axios.post("/user/save", user.value).then((response) => {
