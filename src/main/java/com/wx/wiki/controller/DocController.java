@@ -55,11 +55,20 @@ public class DocController {
         return resp;
     }
 
+    // 删除
     @DeleteMapping("/delete/{ids}")
     public CommonResp delete(@PathVariable String ids) {
         CommonResp resp = new CommonResp<>();
         List<String> stringList = Arrays.asList(ids.split(","));
         docService.delete(stringList);
+        return resp;
+    }
+
+    // 点赞
+    @GetMapping("/vote/{id}")
+    public CommonResp vote(@PathVariable Long id) {
+        CommonResp resp = new CommonResp<>();
+        docService.vote(id);
         return resp;
     }
 }

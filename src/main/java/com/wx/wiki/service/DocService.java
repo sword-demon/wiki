@@ -135,4 +135,10 @@ public class DocService {
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
     }
+
+    // 点赞
+    public void vote(Long id) {
+        // 文档点赞数加1
+        docMapperCust.increaseViewCount(id);
+    }
 }
