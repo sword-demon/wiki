@@ -23,11 +23,5 @@ export default defineComponent({
 <style>
 .wiki-footer {
   text-align: center;
-  height: 100px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  line-height: 100px;
 }
 </style>
