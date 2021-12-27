@@ -7,6 +7,7 @@ import com.wx.wiki.domain.Doc;
 import com.wx.wiki.domain.DocExample;
 import com.wx.wiki.mapper.ContentMapper;
 import com.wx.wiki.mapper.DocMapper;
+import com.wx.wiki.mapper.DocMapperCust;
 import com.wx.wiki.req.DocQueryReq;
 import com.wx.wiki.req.DocSaveReq;
 import com.wx.wiki.resp.DocQueryResp;
@@ -28,6 +29,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -81,6 +85,9 @@ public class DocService {
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
+            // 新增的时候设置阅读数和投票数为0 不然会为null
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             // 保存文档内容
@@ -109,6 +116,8 @@ public class DocService {
     // 查找文档内容
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
+        // 文档阅读数加1
+        docMapperCust.increaseViewCount(id);
         if (!ObjectUtils.isEmpty(content)) {
             return content.getContent();
         } else {
