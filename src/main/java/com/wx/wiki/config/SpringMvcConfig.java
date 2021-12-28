@@ -26,6 +26,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
                         "/category/all",
                         "/ebook/list",
                         "/doc/all/**",
+                        "/doc/vote/**",
                         "/doc/find-content/**"
                 );// 不是所有接口都需要进行拦截
     }
