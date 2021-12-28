@@ -12,7 +12,7 @@ public class CategorySaveReq {
     private String name;
 
     // 这个可以过滤掉 "" 空字符串
-    @NotEmpty(message = "【排序】不能为空")
+    @NotNull(message = "【排序】不能为空")
     private Integer sort;
 
     public Long getId() {

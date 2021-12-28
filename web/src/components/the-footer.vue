@@ -1,13 +1,14 @@
 <template>
   <a-layout-footer class="wiki-footer">
-    Ant Design ©2021 wiki电子书 <span v-show="user.id">欢迎: {{user.name}}</span>
+    Ant Design ©2021 wiki电子书 <span v-show="user.id">欢迎: {{ user.name }}</span>
   </a-layout-footer>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue'
 import store from "@/store";
-import {Tool} from "@/util/tool"
+import { Tool } from "@/util/tool"
+import { notification } from "ant-design-vue";
 
 export default defineComponent({
   name: 'the-footer',
@@ -22,6 +23,10 @@ export default defineComponent({
 
     const onMessage = (event: any) => {
       console.log('WebSocket收到消息: ', event.data)
+      notification['info']({
+        message: '收到消息',
+        description: event.data
+      })
     }
 
     const onError = () => {
