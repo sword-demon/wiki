@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -92,6 +93,7 @@ public class DocService {
     /**
      * save 既要支持新增也要支持更新
      */
+    @Transactional
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
