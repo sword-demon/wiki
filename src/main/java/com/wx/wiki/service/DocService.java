@@ -21,6 +21,7 @@ import com.wx.wiki.util.SnowFlake;
 import com.wx.wiki.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -48,7 +49,7 @@ public class DocService {
     private SnowFlake snowFlake;
 
     @Resource
-    private WebSocketServer webSocketServer;
+    private WsService wsService;
 
     public List<DocQueryResp> all(Long ebookId) {
 
@@ -118,6 +119,7 @@ public class DocService {
 
     /**
      * 删除文档
+     *
      * @param id Long
      */
     public void delete(Long id) {
@@ -138,6 +140,7 @@ public class DocService {
 
     /**
      * 批量删除文档
+     *
      * @param ids
      */
     public void delete(List<String> ids) {
@@ -160,12 +163,13 @@ public class DocService {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
 
+        // 推送消息
         // 根据id查询文档名称
         Doc docDb = docMapper.selectByPrimaryKey(id);
-
-        // 推送消息
-        webSocketServer.sendInfo("【" + docDb.getName() + "】被点赞!");
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞!");
     }
+
+
 
     // 定时任务更新电子书信息
     public void updateEbookInfo() {
