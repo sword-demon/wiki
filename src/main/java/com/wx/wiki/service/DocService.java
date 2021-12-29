@@ -19,6 +19,7 @@ import com.wx.wiki.util.RedisUtil;
 import com.wx.wiki.util.RequestContext;
 import com.wx.wiki.util.SnowFlake;
 import com.wx.wiki.websocket.WebSocketServer;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -52,6 +53,9 @@ public class DocService {
 
     @Resource
     private WsService wsService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
 
@@ -160,7 +164,7 @@ public class DocService {
 
         // 远程IP+doc.id作为key，24小时内不能重复点击
         String key = RequestContext.getRemoteAddr();
-        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + key, 3600 * 24)) {
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + key, 5000)) {
             docMapperCust.increaseVoteCount(id);
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
@@ -172,6 +176,8 @@ public class DocService {
         // 取出日志流水号
         String log_id = MDC.get("LOG_ID");
         wsService.sendInfo("【" + docDb.getName() + "】被点赞!", log_id);
+        // 一个业务逻辑一个 topic 发送方
+        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞!");
     }
 
 
