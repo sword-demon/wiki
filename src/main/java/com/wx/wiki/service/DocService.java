@@ -19,7 +19,7 @@ import com.wx.wiki.util.RedisUtil;
 import com.wx.wiki.util.RequestContext;
 import com.wx.wiki.util.SnowFlake;
 import com.wx.wiki.websocket.WebSocketServer;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
+//import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -54,8 +54,8 @@ public class DocService {
     @Resource
     private WsService wsService;
 
-    @Resource
-    private RocketMQTemplate rocketMQTemplate;
+//    @Resource
+//    private RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
 
@@ -177,7 +177,7 @@ public class DocService {
         String log_id = MDC.get("LOG_ID");
         wsService.sendInfo("【" + docDb.getName() + "】被点赞!", log_id);
         // 一个业务逻辑一个 topic 发送方
-        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞!");
+//        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞!");
     }
 
 
