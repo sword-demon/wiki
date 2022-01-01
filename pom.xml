@@ -91,7 +91,7 @@
 
     <build>
         <!-- 打包生成项目名称的jar包 -->
-        <finalName>${project.artifactId}</finalName>
+        <finalName>/dist/${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

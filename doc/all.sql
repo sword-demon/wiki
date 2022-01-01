@@ -16,8 +16,7 @@ create table `demo`
 ) engine = innodb
   default charset = utf8mb4 comment '测试代码生成器';
 
-#
-电子书表
+-- 电子书表
 drop table if exists `ebook`;
 create table `ebook`
 (
@@ -27,9 +26,9 @@ create table `ebook`
     `category2_id` bigint comment '分类2',
     `description`  varchar(200) comment '描述',
     `cover`        varchar(200) comment '封面',
-    `doc_count`    int comment default 0 '文档数',
-    `view_count`   int comment default 0 '阅读数',
-    `vote_count`   int comment default 0 '点赞数',
+    `doc_count`    int not null default 0 comment '文档数',
+    `view_count`   int not null default 0 comment '阅读数',
+    `vote_count`   int not null default 0 comment '点赞数',
     primary key (`id`)
 ) engine = innodb
   default charset = utf8mb4 comment '电子书';
@@ -42,8 +41,7 @@ values (1, 'SpringBoot 入门教程', '零基础入门Java开发，企业级应�
        (5, 'Oracle 入门教程', '零基础入门 Oracle 开发，企业级应用开发最佳首选框架');
 
 
-#
-分类
+-- 分类
 drop table if exists `category`;
 create table `category`
 (
@@ -56,7 +54,6 @@ create table `category`
   default charset = utf8mb4 comment ='分类';
 
 insert into category (id, parent, name, sort)
-    # 第一位表示一级分类， 后面两位代表二级分类
 values (100, 100, '前端开发', 100),
     (101, 100, 'Vue', 101),
     (102, 100, 'HTML & CSS', 102),

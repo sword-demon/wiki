@@ -1,0 +1,16 @@
+# mybatis配置
+# 增加数据库连接
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/wiki?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: wiki
+    password: 1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+
+# 配置mybatis所有Mapper.xml所在的路径
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
