@@ -178,11 +178,12 @@ export default defineComponent({
           console.log('树形机构: ', level1.value)
 
           // 父文档下拉框初始化，相当于点击新增
-          treeSelectData.value = Tool.copy(level1.value)
+          // 代码简洁优化
+          treeSelectData.value = Tool.copy(level1.value) || []
           // 添加一个无字
-          if (!treeSelectData.value) {
-            treeSelectData.value = []
-          }
+          // if (!treeSelectData.value) {
+          //   treeSelectData.value = []
+          // }
           treeSelectData.value.unshift({id: 0, name: '无'})
         } else {
           message.error(data.message)
@@ -327,7 +328,7 @@ export default defineComponent({
         ebookId: route.query.ebookId
       }
 
-      treeSelectData.value = Tool.copy(level1.value)
+      treeSelectData.value = Tool.copy(level1.value) || []
       // 为选择树添加一个 "无"字
       treeSelectData.value.unshift({id: 0, name: '无'})
 
